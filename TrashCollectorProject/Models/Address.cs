@@ -11,41 +11,26 @@ namespace TrashCollectorProject.Models
     {
         [Key]
         public int Id { get; set; }
-
+        [Required]
         [Display(Name = "Address Line 1")]
         public string AddressLine1 { get; set; }
         [Display(Name = "Address Line 2")]
         public string AddressLine2 { get; set; }
+        [Required]
         public string City { get; set; }
+        [Required]
         public string State { get; set; }
+        [Required]
         [Display(Name = "Zip Code")]
+        [DataType(DataType.PostalCode)]
         public string ZipCode { get; set; }
 
-        [Display(Name = "Sun")]
-        public bool Sunday { get; set; }
-        [Display(Name = "Mon")]
-        public bool Monday { get; set; }
-        [Display(Name = "Tues")]
-        public bool Tuesday { get; set; }
-        [Display(Name = "Wed")]
-        public bool Wednesday { get; set; }
-        [Display(Name = "Thurs")]
-        public bool Thursday { get; set; }
-        [Display(Name = "Fri")]
-        public bool Friday { get; set; }
-        [Display(Name = "Sat")]
-        public bool Saturday { get; set; }
-
+        //extra feature to add a picture of the address from google maps if possible. 
+        [DataType(DataType.ImageUrl)]
         public string Image { get; set; }
 
         public double Latitude { get; set; }
-        
         public double Longitude { get; set; }
-
-
-        [ForeignKey("Customer")]
-        public int CustomerId { get; set; }
-        public Customer Customer { get; set; }
 
 
 

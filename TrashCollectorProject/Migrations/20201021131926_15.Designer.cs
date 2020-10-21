@@ -10,8 +10,8 @@ using TrashCollectorProject.Data;
 namespace TrashCollectorProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201020145037_Initial3")]
-    partial class Initial3
+    [Migration("20201021131926_15")]
+    partial class _15
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -50,22 +50,22 @@ namespace TrashCollectorProject.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "361244e8-9eb4-4702-8750-a21f41b5500c",
-                            ConcurrencyStamp = "526fac42-dbf1-4fb9-83ef-6b6940d86fd9",
+                            Id = "4e45f614-788f-44e6-a83a-21bc649eb072",
+                            ConcurrencyStamp = "9d6a874c-6e5e-42e1-b292-a8efa9ff08db",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "487a1793-d4ad-4b89-8e48-0c69d9a990d6",
-                            ConcurrencyStamp = "0a91f6a0-d3cc-4200-97f1-1d7ee11c5f08",
+                            Id = "7121deda-e441-4c87-9ff3-234bde3bd1cf",
+                            ConcurrencyStamp = "1aa4392d-94fd-497a-b077-1fe9edd00ca7",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "ad4344af-cda7-4cf3-ba6a-83520806653e",
-                            ConcurrencyStamp = "fb6e7a76-2072-4059-8bb8-78cb9a042f2d",
+                            Id = "5609883b-ae84-4e94-a7e4-92e35739d90d",
+                            ConcurrencyStamp = "01fffb8b-8e8a-4104-b86a-5978fd29dd10",
                             Name = "Employee",
                             NormalizedName = "EMPLOYEE"
                         });
@@ -248,19 +248,15 @@ namespace TrashCollectorProject.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AddressLine1")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AddressLine2")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("City")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Friday")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
@@ -271,55 +267,17 @@ namespace TrashCollectorProject.Migrations
                     b.Property<double>("Longitude")
                         .HasColumnType("float");
 
-                    b.Property<bool>("Monday")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Saturday")
-                        .HasColumnType("bit");
-
                     b.Property<string>("State")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Sunday")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Thursday")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Tuesday")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Wednesday")
-                        .HasColumnType("bit");
 
                     b.Property<string>("ZipCode")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId");
-
                     b.ToTable("Address");
-                });
-
-            modelBuilder.Entity("TrashCollectorProject.Models.CompletedDates", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AddressId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AddressId");
-
-                    b.ToTable("CompletedDates");
                 });
 
             modelBuilder.Entity("TrashCollectorProject.Models.Customer", b =>
@@ -332,16 +290,35 @@ namespace TrashCollectorProject.Migrations
                     b.Property<double>("AccountBalance")
                         .HasColumnType("float");
 
+                    b.Property<int>("AddressId")
+                        .HasColumnType("int");
+
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IdentityUserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("OneTimePickUp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PickUpDay")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("SuspendEnd")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("SuspendStart")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
 
                     b.HasIndex("IdentityUserId");
 
@@ -356,15 +333,18 @@ namespace TrashCollectorProject.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IdentityUserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ZipCode")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -372,66 +352,6 @@ namespace TrashCollectorProject.Migrations
                     b.HasIndex("IdentityUserId");
 
                     b.ToTable("Employee");
-                });
-
-            modelBuilder.Entity("TrashCollectorProject.Models.OneTimeDates", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AddressId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AddressId");
-
-                    b.ToTable("OneTimeDates");
-                });
-
-            modelBuilder.Entity("TrashCollectorProject.Models.PostponeDates", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AddressId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AddressId");
-
-                    b.ToTable("PostponeDates");
-                });
-
-            modelBuilder.Entity("TrashCollectorProject.Models.ScheduleDates", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AddressId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AddressId");
-
-                    b.ToTable("ScheduleDates");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -485,26 +405,14 @@ namespace TrashCollectorProject.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TrashCollectorProject.Models.Address", b =>
-                {
-                    b.HasOne("TrashCollectorProject.Models.Customer", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("TrashCollectorProject.Models.CompletedDates", b =>
+            modelBuilder.Entity("TrashCollectorProject.Models.Customer", b =>
                 {
                     b.HasOne("TrashCollectorProject.Models.Address", "Address")
                         .WithMany()
                         .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
 
-            modelBuilder.Entity("TrashCollectorProject.Models.Customer", b =>
-                {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Identity")
                         .WithMany()
                         .HasForeignKey("IdentityUserId");
@@ -515,33 +423,6 @@ namespace TrashCollectorProject.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Identity")
                         .WithMany()
                         .HasForeignKey("IdentityUserId");
-                });
-
-            modelBuilder.Entity("TrashCollectorProject.Models.OneTimeDates", b =>
-                {
-                    b.HasOne("TrashCollectorProject.Models.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("TrashCollectorProject.Models.PostponeDates", b =>
-                {
-                    b.HasOne("TrashCollectorProject.Models.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("TrashCollectorProject.Models.ScheduleDates", b =>
-                {
-                    b.HasOne("TrashCollectorProject.Models.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

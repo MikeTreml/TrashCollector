@@ -18,6 +18,7 @@ namespace TrashCollectorProject.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+         
             builder.Entity<IdentityRole>().HasData(
             new IdentityRole
             {
@@ -36,15 +37,15 @@ namespace TrashCollectorProject.Data
             }
             );
         }
-       
+
 
 
         public DbSet<Address> Address { get; set; }
-        public DbSet<CompletedDates> CompletedDates { get; set; }
+        // public DbSet<CompletedDates> CompletedDates { get; set; }
         public DbSet<Customer> Customer { get; set; }
         public DbSet<Employee> Employee { get; set; }
-        public DbSet<OneTimeDates> OneTimeDates { get; set; }
-        public DbSet<PostponeDates> PostponeDates { get; set; }
-        public DbSet<ScheduleDates> ScheduleDates { get; set; }
+        // public DbSet<OneTimeDates> OneTimeDates { get; set; }
+        // public DbSet<PostponeDates> PostponeDates { get; set; }
+        //  public DbSet<ScheduleDates> ScheduleDates { get; set; }
     }
 }

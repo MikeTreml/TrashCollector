@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -48,9 +49,10 @@ namespace TrashCollectorProject.Controllers
         }
 
         // GET: Customers/Create
-        public IActionResult Create()
+        public ActionResult Create()
         {
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["AddressID"] = new SelectList(_context.Set<Address>(), "AddressID", "AddressID");
+            ViewData["IdentityUserId"] = new SelectList(_context.Set<Customer>(), "ID", "ID");
             return View();
         }
 
@@ -59,33 +61,33 @@ namespace TrashCollectorProject.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,AccountBalance,IdentityUserId")] Customer customer)
+        public ActionResult Create(Customer customer)
         {
             if (ModelState.IsValid)
             {
+                customer.IdentityUserId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 _context.Add(customer);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                _context.SaveChanges();
+                return RedirectToAction("View", "Customers");
             }
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", customer.IdentityUserId);
-            return View(customer);
+            
+            ViewData["AddressID"] = _context.Address.Where(h => h.Id == customer.Id).SingleOrDefault();
+            ViewData["IdentityUserId"] = new SelectList(_context.Set<Customer>(), "ID", "ID");
+
+            return View();
         }
 
         // GET: Customers/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public ActionResult Edit()
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var customer = await _context.Customer.FindAsync(id);
-            if (customer == null)
-            {
-                return NotFound();
-            }
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", customer.IdentityUserId);
-            return View(customer);
+            var id = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var person = _context.Customer.Where(h => h.IdentityUserId == id).SingleOrDefault();
+            var address = _context.Address.Where(h => h.Id == person.AddressId).SingleOrDefault();
+            ViewData["AddressID"] = address;
+            ViewData["IdentityUserId"] = new SelectList(_context.Set<Customer>(), "ID", "ID");
+
+            return View(person);
         }
 
         // POST: Customers/Edit/5
@@ -93,13 +95,15 @@ namespace TrashCollectorProject.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,AccountBalance,IdentityUserId")] Customer customer)
+        public async Task<IActionResult> Edit(Customer customer)
         {
-            if (id != customer.Id)
+            if (customer.Id == 0)
             {
-                return NotFound();
+                return RedirectToAction("Create", customer);
+                
             }
-
+             ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", customer.IdentityUserId);
+            ViewData["AddressID"] = new SelectList(_context.Set<Address>(), "AddressID", "AddressID", customer.AddressId);
             if (ModelState.IsValid)
             {
                 try
@@ -120,7 +124,7 @@ namespace TrashCollectorProject.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", customer.IdentityUserId);
+           
             return View(customer);
         }
 

@@ -3,10 +3,30 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TrashCollectorProject.Migrations
 {
-    public partial class Initial3 : Migration
+    public partial class _14 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Address",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AddressLine1 = table.Column<string>(nullable: false),
+                    AddressLine2 = table.Column<string>(nullable: true),
+                    City = table.Column<string>(nullable: false),
+                    State = table.Column<string>(nullable: false),
+                    ZipCode = table.Column<string>(nullable: false),
+                    Image = table.Column<string>(nullable: true),
+                    Latitude = table.Column<double>(nullable: false),
+                    Longitude = table.Column<double>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Address", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -158,14 +178,25 @@ namespace TrashCollectorProject.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true),
+                    FirstName = table.Column<string>(nullable: false),
+                    LastName = table.Column<string>(nullable: false),
                     AccountBalance = table.Column<double>(nullable: false),
+                    PickUpDay = table.Column<int>(nullable: false),
+                    OneTimePickUp = table.Column<DateTime>(nullable: true),
+                    SuspendStart = table.Column<DateTime>(nullable: true),
+                    SuspendEnd = table.Column<DateTime>(nullable: true),
+                    AddressId = table.Column<int>(nullable: false),
                     IdentityUserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Customer", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Customer_Address_AddressId",
+                        column: x => x.AddressId,
+                        principalTable: "Address",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Customer_AspNetUsers_IdentityUserId",
                         column: x => x.IdentityUserId,
@@ -180,9 +211,9 @@ namespace TrashCollectorProject.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true),
-                    ZipCode = table.Column<string>(nullable: true),
+                    FirstName = table.Column<string>(nullable: false),
+                    LastName = table.Column<string>(nullable: false),
+                    ZipCode = table.Column<string>(nullable: false),
                     IdentityUserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -196,139 +227,20 @@ namespace TrashCollectorProject.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Address",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AddressLine1 = table.Column<string>(nullable: true),
-                    AddressLine2 = table.Column<string>(nullable: true),
-                    City = table.Column<string>(nullable: true),
-                    State = table.Column<string>(nullable: true),
-                    ZipCode = table.Column<string>(nullable: true),
-                    Sunday = table.Column<bool>(nullable: false),
-                    Monday = table.Column<bool>(nullable: false),
-                    Tuesday = table.Column<bool>(nullable: false),
-                    Wednesday = table.Column<bool>(nullable: false),
-                    Thursday = table.Column<bool>(nullable: false),
-                    Friday = table.Column<bool>(nullable: false),
-                    Saturday = table.Column<bool>(nullable: false),
-                    Image = table.Column<string>(nullable: true),
-                    Latitude = table.Column<double>(nullable: false),
-                    Longitude = table.Column<double>(nullable: false),
-                    CustomerId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Address", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Address_Customer_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Customer",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CompletedDates",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Date = table.Column<DateTime>(nullable: false),
-                    AddressId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CompletedDates", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CompletedDates_Address_AddressId",
-                        column: x => x.AddressId,
-                        principalTable: "Address",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "OneTimeDates",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Date = table.Column<DateTime>(nullable: false),
-                    AddressId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OneTimeDates", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_OneTimeDates_Address_AddressId",
-                        column: x => x.AddressId,
-                        principalTable: "Address",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PostponeDates",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Date = table.Column<DateTime>(nullable: false),
-                    AddressId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PostponeDates", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_PostponeDates_Address_AddressId",
-                        column: x => x.AddressId,
-                        principalTable: "Address",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ScheduleDates",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Date = table.Column<DateTime>(nullable: false),
-                    AddressId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ScheduleDates", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ScheduleDates_Address_AddressId",
-                        column: x => x.AddressId,
-                        principalTable: "Address",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { "eac8cca7-97e0-4e34-8c5f-4ffd8f2215eb", "0813f33d-8068-448a-bd09-a8d21556480f", "Admin", "ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "361244e8-9eb4-4702-8750-a21f41b5500c", "526fac42-dbf1-4fb9-83ef-6b6940d86fd9", "Admin", "ADMIN" });
+                values: new object[] { "bcaeec36-68cb-48d8-8415-da24548a00c3", "ba3f14d2-66c4-4f6f-9a8d-0d9aa700ef3c", "Customer", "CUSTOMER" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "487a1793-d4ad-4b89-8e48-0c69d9a990d6", "0a91f6a0-d3cc-4200-97f1-1d7ee11c5f08", "Customer", "CUSTOMER" });
-
-            migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "ad4344af-cda7-4cf3-ba6a-83520806653e", "fb6e7a76-2072-4059-8bb8-78cb9a042f2d", "Employee", "EMPLOYEE" });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Address_CustomerId",
-                table: "Address",
-                column: "CustomerId");
+                values: new object[] { "91fdf2f0-5806-48b4-8141-b9442aba9516", "57aac434-f440-4dbf-b351-c8785e28e4d1", "Employee", "EMPLOYEE" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -370,8 +282,8 @@ namespace TrashCollectorProject.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CompletedDates_AddressId",
-                table: "CompletedDates",
+                name: "IX_Customer_AddressId",
+                table: "Customer",
                 column: "AddressId");
 
             migrationBuilder.CreateIndex(
@@ -383,21 +295,6 @@ namespace TrashCollectorProject.Migrations
                 name: "IX_Employee_IdentityUserId",
                 table: "Employee",
                 column: "IdentityUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OneTimeDates_AddressId",
-                table: "OneTimeDates",
-                column: "AddressId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PostponeDates_AddressId",
-                table: "PostponeDates",
-                column: "AddressId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ScheduleDates_AddressId",
-                table: "ScheduleDates",
-                column: "AddressId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -418,28 +315,16 @@ namespace TrashCollectorProject.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "CompletedDates");
+                name: "Customer");
 
             migrationBuilder.DropTable(
                 name: "Employee");
-
-            migrationBuilder.DropTable(
-                name: "OneTimeDates");
-
-            migrationBuilder.DropTable(
-                name: "PostponeDates");
-
-            migrationBuilder.DropTable(
-                name: "ScheduleDates");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "Address");
-
-            migrationBuilder.DropTable(
-                name: "Customer");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
