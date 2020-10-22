@@ -68,12 +68,12 @@
    
     <a asp-action="Index">Back to List</a>
 </div>
-@section Scripts {
+
     <script>
         var map;
         function initMap() {
             map = new google.maps.Map(document.getElementById('map'), {
-                center: { lat: @Html.DisplayFor(model => model.Address.Latitude), lng: @Html.DisplayFor(model => model.Address.Latitude) },
+                center: { lat: 43.00706, lng: -88.012784 },
                 zoom: 8
             });
         }
@@ -83,4 +83,3 @@
 
 
 
-}
