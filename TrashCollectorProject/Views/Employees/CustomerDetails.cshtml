@@ -1,0 +1,86 @@
+﻿@model TrashCollectorProject.Models.Customer
+
+@{
+    ViewData["Title"] = "Customer Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    
+}
+
+<h1>Customer Details</h1>
+
+<div>
+    <h4>Customer</h4>
+    
+    <div id="map"></div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            Customer Name
+        </dt>
+
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FirstName) @Html.DisplayFor(model => model.LastName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PickUpDay)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PickUpDay)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.OneTimePickUp)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.OneTimePickUp)
+        </dd>
+        <dt class="col-sm-2">
+            Address:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Address.AddressLine1)<br />
+            @Html.DisplayFor(model => model.Address.City) @Html.DisplayFor(model => model.Address.State) @Html.DisplayFor(model => model.Address.ZipCode)
+        </dd>
+
+        <dt class="col-sm-2">
+            Postpane Dates
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SuspendStart) - @Html.DisplayFor(model => model.SuspendEnd)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AccountBalance)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AccountBalance)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IdentityUserId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IdentityUserId)
+        </dd>
+
+    </dl>
+    <d2 class="row">
+
+    </d2>
+</div>
+<div>
+   
+    <a asp-action="Index">Back to List</a>
+</div>
+@section Scripts {
+    <script>
+        var map;
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: @Html.DisplayFor(model => model.Address.Latitude), lng: @Html.DisplayFor(model => model.Address.Latitude) },
+                zoom: 8
+            });
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"
+            async defer></script>
+
+
+
+}

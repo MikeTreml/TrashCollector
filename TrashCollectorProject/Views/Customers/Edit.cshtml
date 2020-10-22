@@ -3,7 +3,7 @@
 
 @{
 
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Update Account";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var address = ViewData["AddressID"] as Address;
 
@@ -52,6 +52,12 @@
                 </select>
                 <span asp-validation-for="PickUpDay" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="OneTimePickUp" class="control-label"></label>
+                <input asp-for="OneTimePickUp" class="form-control" />
+                <span asp-validation-for="OneTimePickUp" class="text-danger"></span>
+            </div>
+            
             <div class="form-group">
                 <label asp-for="SuspendStart" class="control-label"></label>
                 <input asp-for="SuspendStart" class="form-control" />
@@ -103,7 +109,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Back to Home</a>
 </div>
 
 @section Scripts {

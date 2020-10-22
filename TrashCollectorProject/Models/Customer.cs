@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace TrashCollectorProject.Models
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
         [Display(Name = "Current Balance")]
+        [DefaultValue(0)]
         public double AccountBalance { get; set; }
         [Display(Name = "Pick up day of the week")]
         public DayOfWeek PickUpDay { get; set; }

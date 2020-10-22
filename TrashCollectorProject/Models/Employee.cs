@@ -24,6 +24,7 @@ namespace TrashCollectorProject.Models
         public string ZipCode { get; set; }
 
         [ForeignKey("IdentityUser")]
+        [Display(Name = "Identity User")]
         public string IdentityUserId { get; set; }
         public IdentityUser Identity { get; set; }
     }

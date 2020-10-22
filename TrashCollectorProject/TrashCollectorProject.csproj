@@ -6,10 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Models\FutureIdeas\**" />
-    <Content Remove="Models\FutureIdeas\**" />
-    <EmbeddedResource Remove="Models\FutureIdeas\**" />
-    <None Remove="Models\FutureIdeas\**" />
+    <Content Remove="Views\Employees\Delete.cshtml" />
+    <Content Remove="Views\Employees\Details.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

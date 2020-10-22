@@ -19,5 +19,7 @@ namespace TrashCollectorProject.Models
         [ForeignKey("Address")]
         public int AddressId { get; set; }
         public Address Address { get; set; }
+
+       
     }
 }
