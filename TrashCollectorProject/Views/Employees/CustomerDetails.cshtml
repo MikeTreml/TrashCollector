@@ -1,17 +1,17 @@
 ﻿@model TrashCollectorProject.Models.Customer
-
 @{
     ViewData["Title"] = "Customer Details";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutMap.cshtml";
     
+
 }
 
 <h1>Customer Details</h1>
 
 <div>
     <h4>Customer</h4>
-    
-    <div id="map"></div>
+
+
     <dl class="row">
         <dt class="col-sm-2">
             Customer Name
@@ -56,30 +56,44 @@
             @Html.DisplayNameFor(model => model.IdentityUserId)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.IdentityUserId)
+        
         </dd>
 
     </dl>
     <d2 class="row">
 
     </d2>
+
 </div>
+<div id="map"></div>
 <div>
-   
+
     <a asp-action="Index">Back to List</a>
 </div>
 
-    <script>
-        var map;
-        function initMap() {
-            map = new google.maps.Map(document.getElementById('map'), {
-                center: { lat: 43.00706, lng: -88.012784 },
-                zoom: 8
-            });
-        }
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"
-            async defer></script>
+<style type="text/css">
+    /* Always set the map height explicitly to define the size of the div
+            * element that contains the map. */
+    #map {
+        width: 100%;
+        height: 400px;
+        background-color: grey;
+    }
+</style>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 
-
+<script>
+    
+    function initMap() {
+        const location = { lat:@ViewBag.latitude, lng: @ViewBag.longitude };
+        const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 12,
+            center: location,
+        });
+        const marker = new google.maps.Marker({
+            position: location,
+            map: map,
+        });
+    }
+</script>
 

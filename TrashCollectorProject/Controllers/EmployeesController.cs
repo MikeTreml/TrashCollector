@@ -38,6 +38,8 @@ namespace TrashCollectorProject.Controllers
         //GET: Employees/Details/5
         public async Task<IActionResult> CustomerDetails(int? id)
         {
+
+            
             if (id == null)
             {
                 return NotFound();
@@ -50,6 +52,9 @@ namespace TrashCollectorProject.Controllers
             {
                 return NotFound();
             }
+            var address = _context.Address.Where(h => h.Id == customer.AddressId).SingleOrDefault();
+            ViewBag.latitude = address.Latitude;
+            ViewBag.longitude = address.Longitude;
 
             return View(customer);
         }
