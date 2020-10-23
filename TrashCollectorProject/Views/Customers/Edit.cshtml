@@ -57,7 +57,7 @@
                 <input asp-for="OneTimePickUp" class="form-control" />
                 <span asp-validation-for="OneTimePickUp" class="text-danger"></span>
             </div>
-            
+
             <div class="form-group">
                 <label asp-for="SuspendStart" class="control-label"></label>
                 <input asp-for="SuspendStart" class="form-control" />
@@ -90,18 +90,16 @@
                 <input asp-for="Address.ZipCode" class="form-control" />
             </div>
             <div class="form-group">
-                <label asp-for="Address.Longitude" class="control-label"></label>
-                <input asp-for="Address.Longitude" class="form-control" />
+             
+                <input asp-for="Address.Longitude" id="lng" class="form-control" />
             </div>
             <div class="form-group">
-                <label asp-for="Address.Latitude" class="control-label"></label>
-                <input asp-for="Address.Latitude" class="form-control" />
+                
+                <input asp-for="Address.Latitude" id="lat" class="form-control" />
             </div>
+
             <div class="form-group">
-                <label asp-for="Address.Image" class="control-label"></label>
-                <input asp-for="Address.Image" class="form-control" />
-            </div>
-            <div class="form-group">
+                <button type="button" id="btnScore"onclick="GeoTag()">Click me!</button>
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
@@ -115,3 +113,32 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+    function GeoTag() {
+        alert("working");
+        var adressLocation = '2046 s 80th st west allis wi 53219'
+         axios.get('https://maps.googleapis.com/maps/api/geocode/json',{
+           params:{
+             address:adressLocation,
+             key:'AIzaSyAt6_Sxcg74rfR4SfPD_SF8nlYpCX2PhHQ'
+           }
+         })
+         .then(function(response){
+
+          console.log(response);
+          var lng = response.data.results[0].geometry.location.lng;
+          var lat = response.data.results[0].geometry.location.lat;
+             Address.Latitude = lat;
+             Address.Longitude = lng;
+
+         })
+         .catch(function(error){
+           console.log(error);
+         });
+
+       }
+
+</script>
