@@ -85,10 +85,10 @@
 <script async defer src="@APIKeys.GOOGLE_MAP"></script>
 <script>
 
-
     function initMap() {
-         var adressLocation =  "2046 s 80th st west allis wi 53219";
-            alert(adressLocation);
+         var adressLocation = "@Html.DisplayFor(model => model.Address.AddressLine1) @Html.DisplayFor(model => model.Address.City) @Html.DisplayFor(model => model.Address.State) @Html.DisplayFor(model => model.Address.ZipCode) ";
+
+      
             axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
             params:{
             address:adressLocation,
@@ -106,8 +106,8 @@
             map: map,
             });
          })
-         
-        
+
+
     }
 </script>
 
