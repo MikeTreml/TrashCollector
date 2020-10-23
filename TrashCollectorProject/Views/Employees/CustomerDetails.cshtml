@@ -80,20 +80,34 @@
         background-color: grey;
     }
 </style>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 <script async defer src="@APIKeys.GOOGLE_MAP"></script>
 <script>
-    
+
+
     function initMap() {
-        const location = { lat:@ViewBag.latitude, lng: @ViewBag.longitude };
-        const map = new google.maps.Map(document.getElementById("map"), {
+         var adressLocation =  "2046 s 80th st west allis wi 53219";
+            alert(adressLocation);
+            axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
+            params:{
+            address:adressLocation,
+                 key:"@APIKeys.GOOGLE_API_KEY"
+           }
+         })
+         .then(function(response){
+            const location = { lat: response.data.results[0].geometry.location.lat, lng: response.data.results[0].geometry.location.lng };
+            const map = new google.maps.Map(document.getElementById("map"), {
             zoom: 12,
             center: location,
-        });
-        const marker = new google.maps.Marker({
+            });
+            const marker = new google.maps.Marker({
             position: location,
             map: map,
-        });
+            });
+         })
+         
+        
     }
 </script>
 

@@ -5,7 +5,7 @@
 
     ViewData["Title"] = "Update Account";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var address = ViewData["AddressID"] as Address;
+    var address = ViewData["AddressID"];
 
 }
 
@@ -99,7 +99,7 @@
             </div>
 
             <div class="form-group">
-                <button type="button" id="btnScore"onclick="GeoTag()">Click me!</button>
+              
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
@@ -119,11 +119,11 @@
 <script>
     function GeoTag() {
         alert("working");
-        var adressLocation = '2046 s 80th st west allis wi 53219'
+        var adressLocation = add
          axios.get('https://maps.googleapis.com/maps/api/geocode/json',{
            params:{
              address:adressLocation,
-             key:'AIzaSyAt6_Sxcg74rfR4SfPD_SF8nlYpCX2PhHQ'
+                 key: 
            }
          })
          .then(function(response){
