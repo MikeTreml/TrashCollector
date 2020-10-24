@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TrashCollectorProject.Models.Customer>
+﻿@model IEnumerable<TrashCollectorProject.Models.JoinCustomerAddress>
 
 @{
     ViewData["Title"] = "View";
@@ -14,27 +14,36 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.FirstName)
+                @Html.DisplayNameFor(model => model.CustomerVM.FirstName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LastName)
+                @Html.DisplayNameFor(model => model.CustomerVM.LastName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AccountBalance)
+                @Html.DisplayNameFor(model => model.CustomerVM.AccountBalance)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PickUpDay)
+                @Html.DisplayNameFor(model => model.CustomerVM.PickUpDay)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.OneTimePickUp)
+                @Html.DisplayNameFor(model => model.CustomerVM.OneTimePickUp)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.SuspendStart)
+                @Html.DisplayNameFor(model => model.CustomerVM.SuspendStart)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.SuspendEnd)
+                @Html.DisplayNameFor(model => model.CustomerVM.SuspendEnd)
             </th>
-           
+            <th>
+                @Html.DisplayNameFor(model => model.AddressVM.ZipCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AddressVM.Latitude)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AddressVM.Longitude)
+            </th>
+
             <th></th>
         </tr>
     </thead>
@@ -42,30 +51,38 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
+                @Html.DisplayFor(modelItem => item.CustomerVM.FirstName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.LastName)
+                @Html.DisplayFor(modelItem => item.CustomerVM.LastName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AccountBalance)
+                @Html.DisplayFor(modelItem => item.CustomerVM.AccountBalance)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PickUpDay)
+                @Html.DisplayFor(modelItem => item.CustomerVM.PickUpDay)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.OneTimePickUp)
+                @Html.DisplayFor(modelItem => item.CustomerVM.OneTimePickUp)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.SuspendStart)
+                @Html.DisplayFor(modelItem => item.CustomerVM.SuspendStart)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.SuspendEnd)
+                @Html.DisplayFor(modelItem => item.CustomerVM.SuspendEnd)
             </td>
-            
             <td>
-                <a asp-action="CustomerDetails" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="" asp-route-id="@item.Id">Completed</a>
+                @Html.DisplayFor(modelItem => item.AddressVM.ZipCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AddressVM.Longitude)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AddressVM.Longitude)
+            </td>
+            <td>
+                <a asp-action="CustomerDetails" asp-route-id="@item.CustomerVM.Id">Details</a> |
+                <a asp-action="PickComplete" asp-route-id="@item.CustomerVM.Id">Completed</a>
             </td>
         </tr>
 }

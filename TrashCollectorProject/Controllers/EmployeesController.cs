@@ -33,6 +33,12 @@ namespace TrashCollectorProject.Controllers
                 return RedirectToAction("Create");
             }
             var customers = _context.Customer;
+            var address = _context.Address;
+            var joinCustomerAddresses = from s in customers
+                                   join st in address on s.AddressId equals st.Id into st2
+                                   from st in st2.DefaultIfEmpty()
+                                   select new JoinCustomerAddress { CustomerVM = s, AddressVM = st };
+            
             var completed = _context.CompletedDates.Where(c => c.Date == DateTime.Today);
             string todayOfWeek = DateTime.Today.DayOfWeek.ToString();
 
@@ -42,8 +48,8 @@ namespace TrashCollectorProject.Controllers
             //    .Where(c => c.PickUpDay == todayOfWeek)
             //    .Where(c => c.Address.ZipCode == employee.ZipCode);
 
-            var dayCustomerfilter = customers
-               .Where(c => !completed.Any(f => f.AddressId == c.AddressId));
+            var dayCustomerfilter = joinCustomerAddresses
+               .Where(c => !completed.Any(f => f.AddressId == c.AddressVM.Id));
            
 
 
@@ -75,7 +81,7 @@ namespace TrashCollectorProject.Controllers
         }
 
         //GET: Employees/Create
-        public ActionResult Create()
+        public async Task<IActionResult> Create()
         {
             ViewData["IdentityUserId"] = new SelectList(_context.Set<Employee>(), "ID", "ID");
             return View();
@@ -86,7 +92,7 @@ namespace TrashCollectorProject.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Employee employee)
+        public async Task<IActionResult> Create(Employee employee)
         {
             if (ModelState.IsValid)
             {
@@ -100,7 +106,7 @@ namespace TrashCollectorProject.Controllers
         }
 
         // GET: Employees/Edit/5
-        public ActionResult Edit()
+        public async Task<IActionResult> Edit()
         {
             
             // ViewData["IdentityUserId"] = new SelectList(_context.Set<Customer>(), "ID", "ID");
