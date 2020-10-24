@@ -16,9 +16,15 @@
         <dt class="col-sm-2">
             Customer Name
         </dt>
-
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.FirstName) @Html.DisplayFor(model => model.LastName)
+        </dd>
+        <dt class="col-sm-2">
+            Address:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Address.AddressLine1)<br />
+            @Html.DisplayFor(model => model.Address.City), @Html.DisplayFor(model => model.Address.State) @Html.DisplayFor(model => model.Address.ZipCode)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.PickUpDay)
@@ -33,31 +39,12 @@
             @Html.DisplayFor(model => model.OneTimePickUp)
         </dd>
         <dt class="col-sm-2">
-            Address:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Address.AddressLine1)<br />
-            @Html.DisplayFor(model => model.Address.City) @Html.DisplayFor(model => model.Address.State) @Html.DisplayFor(model => model.Address.ZipCode)
-        </dd>
-
-        <dt class="col-sm-2">
             Postpane Dates
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.SuspendStart) - @Html.DisplayFor(model => model.SuspendEnd)
         </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.AccountBalance)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.AccountBalance)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.IdentityUserId)
-        </dt>
-        <dd class="col-sm-10">
-           
-        </dd>
+
 
     </dl>
     <d2 class="row">

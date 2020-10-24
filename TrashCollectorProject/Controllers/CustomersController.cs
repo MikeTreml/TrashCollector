@@ -73,6 +73,9 @@ namespace TrashCollectorProject.Controllers
             if (ModelState.IsValid)
             {
                 customer.IdentityUserId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                customer.AccountBalance = 0;
+
+                //add cordinate tool here 
                 _context.Add(customer);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));

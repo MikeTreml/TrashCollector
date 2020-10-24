@@ -23,16 +23,31 @@ namespace TrashCollectorProject.Controllers
         }
 
         // GET: Employees
-        public ActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var id = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var employee = _context.Employee.FirstOrDefault(e => e.IdentityUserId == id);
+           
             if (employee is null)
             {
                 return RedirectToAction("Create");
             }
             var customers = _context.Customer;
-            return View(customers);
+            var completed = _context.CompletedDates.Where(c => c.Date == DateTime.Today);
+            string todayOfWeek = DateTime.Today.DayOfWeek.ToString();
+
+            //var customerList = customers.Where(c => c.SuspendStart > DateTime.Today || c.SuspendEnd < DateTime.Today || c.OneTimePickUp == DateTime.Today);
+            //var dayCustomerfilter = customers
+            //    .Where(c => c.SuspendStart > DateTime.Today || c.SuspendEnd < DateTime.Today || c.OneTimePickUp == DateTime.Today)
+            //    .Where(c => c.PickUpDay == todayOfWeek)
+            //    .Where(c => c.Address.ZipCode == employee.ZipCode);
+
+            var dayCustomerfilter = customers
+               .Where(c => !completed.Any(f => f.AddressId == c.AddressId));
+           
+
+
+            return View(dayCustomerfilter);
         }
 
         //GET: Employees/Details/5
