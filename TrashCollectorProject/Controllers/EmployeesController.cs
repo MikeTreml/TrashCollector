@@ -34,25 +34,26 @@ namespace TrashCollectorProject.Controllers
             }
             var customers = _context.Customer;
             var address = _context.Address;
+            
             var joinCustomerAddresses = from s in customers
                                    join st in address on s.AddressId equals st.Id into st2
                                    from st in st2.DefaultIfEmpty()
                                    select new JoinCustomerAddress { CustomerVM = s, AddressVM = st };
             
-            var completed = _context.CompletedDates.Where(c => c.Date == DateTime.Today);
+            
             string todayOfWeek = DateTime.Today.DayOfWeek.ToString();
-
-            //var customerList = customers.Where(c => c.SuspendStart > DateTime.Today || c.SuspendEnd < DateTime.Today || c.OneTimePickUp == DateTime.Today);
-            //var dayCustomerfilter = customers
-            //    .Where(c => c.SuspendStart > DateTime.Today || c.SuspendEnd < DateTime.Today || c.OneTimePickUp == DateTime.Today)
-            //    .Where(c => c.PickUpDay == todayOfWeek)
-            //    .Where(c => c.Address.ZipCode == employee.ZipCode);
-
+            //completed table filtering only for todays dates. so to check if a complete pickup is done it only needs to search for the address ID below
+            var completed = _context.CompletedDates.Where(c => c.Date == DateTime.Today);
             var dayCustomerfilter = joinCustomerAddresses
-               .Where(c => !completed.Any(f => f.AddressId == c.AddressVM.Id));
-           
-
-
+                //filters today is in a suspended period or if is a one time pickup. the one tiem pickup is ment to override a suspention period
+                // in the case a customer doesn't want weekly pickup and only scheduled pickups
+                .Where(c => c.CustomerVM.SuspendStart > DateTime.Today || c.CustomerVM.SuspendEnd < DateTime.Today || c.CustomerVM.OneTimePickUp == DateTime.Today)
+                //filters for the day of the week
+                .Where(c => c.CustomerVM.PickUpDay == todayOfWeek)
+                //filters zipcode
+                .Where(c => c.AddressVM.ZipCode == employee.ZipCode)
+                //filters against a completed table for the address ID
+                .Where(c => !completed.Any(f => f.AddressId == c.AddressVM.Id));
             return View(dayCustomerfilter);
         }
 
