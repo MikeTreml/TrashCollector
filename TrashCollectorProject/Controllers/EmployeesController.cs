@@ -23,7 +23,7 @@ namespace TrashCollectorProject.Controllers
         }
 
         // GET: Employees
-        public async Task<IActionResult> Index()
+        public ActionResult Index()
         {
             var id = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var employee = _context.Employee.FirstOrDefault(e => e.IdentityUserId == id);
@@ -56,6 +56,16 @@ namespace TrashCollectorProject.Controllers
                 .Where(c => !completed.Any(f => f.AddressId == c.AddressVM.Id));
             return View(dayCustomerfilter);
         }
+        public ActionResult PickComplete(int id) 
+        {
+            CompletedDates completed = new CompletedDates();
+            completed.AddressId = id;
+            completed.Date = DateTime.Today;
+           
+            _context.Add(completed);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
 
         //GET: Employees/Details/5
         public async Task<IActionResult> CustomerDetails(int? id)
@@ -82,7 +92,7 @@ namespace TrashCollectorProject.Controllers
         }
 
         //GET: Employees/Create
-        public async Task<IActionResult> Create()
+        public ActionResult Create()
         {
             ViewData["IdentityUserId"] = new SelectList(_context.Set<Employee>(), "ID", "ID");
             return View();

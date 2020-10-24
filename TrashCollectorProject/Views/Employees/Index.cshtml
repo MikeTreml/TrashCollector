@@ -75,14 +75,14 @@
                 @Html.DisplayFor(modelItem => item.AddressVM.ZipCode)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AddressVM.Longitude)
+                @Html.DisplayFor(modelItem => item.AddressVM.Latitude)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.AddressVM.Longitude)
             </td>
             <td>
                 <a asp-action="CustomerDetails" asp-route-id="@item.CustomerVM.Id">Details</a> |
-                <a asp-action="PickComplete" asp-route-id="@item.CustomerVM.Id">Completed</a>
+                <a asp-action="PickComplete" asp-route-id="@item.CustomerVM.AddressId">Completed</a>
             </td>
         </tr>
 }
