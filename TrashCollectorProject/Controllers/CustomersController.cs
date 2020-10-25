@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Geocoding;
+using Geocoding.Google;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -25,8 +27,9 @@ namespace TrashCollectorProject.Controllers
         // GET: Customers
         public IActionResult Index()
         {
+            var customers = _context.Customer;
             var id = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var customer = _context.Customer.Where(c => c.IdentityUserId == id).SingleOrDefault();
+            var customer = customers.Where(c => c.IdentityUserId == id).FirstOrDefault();
             //ViewData["AddressID"] = _context.Address.Where(h => h.Id == customer.Id).SingleOrDefault();
             //ViewData["IdentityUserId"] = new SelectList(_context.Set<Customer>(), "ID", "ID");
             //var applicationDbContext = _context.Customer.Include(c => c.Identity);
@@ -72,10 +75,11 @@ namespace TrashCollectorProject.Controllers
         {
             if (ModelState.IsValid)
             {
+               
                 customer.IdentityUserId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 customer.AccountBalance = 0;
 
-                //add cordinate tool here 
+              
                 _context.Add(customer);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
@@ -92,6 +96,12 @@ namespace TrashCollectorProject.Controllers
         public ActionResult Edit()
         {
 
+            //var customers = _context.Customer;
+            //var address = _context.Address;
+            //var joinCustomerAddresses = from s in customers
+            //                            join st in address on s.AddressId equals st.Id into st2
+            //                            from st in st2.DefaultIfEmpty()
+            //                            select new JoinCustomerAddress { CustomerVM = s, AddressVM = st };
             var id = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var person = _context.Customer.Where(h => h.IdentityUserId == id).SingleOrDefault();
             var address = _context.Address.Where(h => h.Id == person.AddressId).SingleOrDefault();
@@ -110,7 +120,7 @@ namespace TrashCollectorProject.Controllers
             if (customer.Id == 0)
             {
                 return RedirectToAction("Create", customer);
-                
+
             }
             // ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", customer.IdentityUserId);
             //ViewData["AddressID"] = new SelectList(_context.Set<Address>(), "AddressID", "AddressID", customer.AddressId);
@@ -118,8 +128,15 @@ namespace TrashCollectorProject.Controllers
             {
                 try
                 {
+                    
                     _context.Update(customer);
                     await _context.SaveChangesAsync();
+
+                    var customerAddress = _context.Address.Where(a => a.Id == customer.AddressId).SingleOrDefault();
+                    IGeocoder geocoder = new GoogleGeocoder() { ApiKey = APIKeys.GOOGLE_API_KEY };
+                    IEnumerable<Geocoding.Address> addresses = await geocoder.GeocodeAsync(customerAddress.AddressLine1 + " " + customerAddress.City + " " + customerAddress.State + " " + customerAddress.ZipCode);
+                    customerAddress.Latitude = addresses.First().Coordinates.Latitude;
+                    customerAddress.Longitude = addresses.First().Coordinates.Longitude;
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -134,7 +151,7 @@ namespace TrashCollectorProject.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(customer);
+            return View("Index");
         }
         
         //// GET: Customers/Delete/5

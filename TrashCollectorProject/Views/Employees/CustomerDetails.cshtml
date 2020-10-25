@@ -1,7 +1,7 @@
 ﻿@model TrashCollectorProject.Models.Customer
 @{
     ViewData["Title"] = "Customer Details";
-    Layout = "~/Views/Shared/_LayoutMap.cshtml";
+    Layout = "~/Views/Shared/_LayoutEmployee.cshtml";
 
 
 }
@@ -50,7 +50,9 @@
     <d2 class="row">
 
     </d2>
-
+    <div>
+        lat:@Html.DisplayFor(model => model.Address.Latitude) lng:@Html.DisplayFor(model => model.Address.Longitude)
+    </div>
 </div>
 <div id="map"></div>
 <div>
@@ -67,23 +69,13 @@
         background-color: grey;
     }
 </style>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 <script async defer src="@APIKeys.GOOGLE_MAP"></script>
 <script>
 
     function initMap() {
-         var adressLocation = "@Html.DisplayFor(model => model.Address.AddressLine1) @Html.DisplayFor(model => model.Address.City) @Html.DisplayFor(model => model.Address.State) @Html.DisplayFor(model => model.Address.ZipCode) ";
-
-      
-            axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
-            params:{
-            address:adressLocation,
-                 key:"@APIKeys.GOOGLE_API_KEY"
-           }
-         })
-         .then(function(response){
-            const location = { lat: response.data.results[0].geometry.location.lat, lng: response.data.results[0].geometry.location.lng };
+          const location = { lat:  @Html.DisplayFor(model => model.Address.Latitude), lng: @Html.DisplayFor(model => model.Address.Longitude) };
             const map = new google.maps.Map(document.getElementById("map"), {
             zoom: 12,
             center: location,
@@ -92,7 +84,6 @@
             position: location,
             map: map,
             });
-         })
 
 
     }

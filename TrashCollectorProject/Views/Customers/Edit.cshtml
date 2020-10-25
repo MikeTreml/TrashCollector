@@ -4,8 +4,8 @@
 @{
 
     ViewData["Title"] = "Update Account";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    var address = ViewData["AddressID"];
+    Layout = "~/Views/Shared/_LayoutCustomer.cshtml";
+    
 
 }
 
@@ -85,7 +85,7 @@
             </div>
             <div class="form-group">
              
-                <input asp-for="Address.Longitude" id="lng" class="form-control" />
+                <input asp-for="Address.Longitude"  class="form-control" />
             </div>
             <div class="form-group">
                 
@@ -107,32 +107,3 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
-
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
-<script>
-    function GeoTag() {
-        alert("working");
-        var adressLocation = add
-         axios.get('https://maps.googleapis.com/maps/api/geocode/json',{
-           params:{
-             address:adressLocation,
-                 key: 
-           }
-         })
-         .then(function(response){
-
-          console.log(response);
-          var lng = response.data.results[0].geometry.location.lng;
-          var lat = response.data.results[0].geometry.location.lat;
-             Address.Latitude = lat;
-             Address.Longitude = lng;
-
-         })
-         .catch(function(error){
-           console.log(error);
-         });
-
-       }
-
-</script>
