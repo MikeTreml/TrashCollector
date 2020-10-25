@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_LayoutEmployee.cshtml";
 
 }
-<h1>View</h1>
+<h1>View @ViewData["Day"]</h1>
 <div>
     <a asp-action="Index" asp-route-date="Sunday">Sunday    </a>
     <a asp-action="Index" asp-route-date="Monday">Monday    </a>
@@ -14,11 +14,9 @@
     <a asp-action="Index" asp-route-date="Thursday">Thursday    </a>
     <a asp-action="Index" asp-route-date="Friday">Friday    </a>
     <a asp-action="Index" asp-route-date="Saturday">Saturday    </a>
-    
+
 </div>
-
-
-<table class="table">
+<table>
     <thead>
         <tr>
             <th>
@@ -45,12 +43,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.AddressVM.ZipCode)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AddressVM.Latitude)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AddressVM.Longitude)
-            </th>
+
 
             <th></th>
         </tr>
@@ -83,17 +76,73 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.AddressVM.ZipCode)
                 </td>
+
                 <td>
-                    @Html.DisplayFor(modelItem => item.AddressVM.Latitude)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AddressVM.Longitude)
-                </td>
-                <td>
-                    <a asp-action="CustomerDetails" asp-route-id="@item.CustomerVM.Id">Details</a> |
-                    <a asp-action="PickComplete" asp-route-id="@item.CustomerVM.AddressId">Completed</a>
+
+                    <a asp-action="CustomerDetails" asp-route-id="@item.CustomerVM.Id">Details</a> <br />
+                    <div @ViewData["Hidden"]>
+                        <a asp-action="PickComplete" asp-route-id="@item.CustomerVM.AddressId">Completed</a>
+                    </div>
                 </td>
             </tr>
+
         }
     </tbody>
 </table>
+<div id="map"></div>
+
+<style type="text/css">
+    /* Always set the map height explicitly to define the size of the div
+            * element that contains the map. */
+    #map {
+        width: 100%;
+        height: 400px;
+        background-color: grey;
+    }
+</style>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<script async defer src="@APIKeys.GOOGLE_MAP"></script>
+<script>
+
+    function initMap() {
+        var adressLocation = "@ViewBag.zip"
+         axios.get('https://maps.googleapis.com/maps/api/geocode/json',{
+           params:{
+             address:adressLocation,
+             key:"@APIKeys.GOOGLE_API_KEY"
+           }
+         })
+         .then(function(response){
+          console.log(response);
+          var lng = response.data.results[0].geometry.location.lng;
+          var lat = response.data.results[0].geometry.location.lat;
+            
+          const location = { lat: lat, lng: lng };
+          const map = new google.maps.Map(document.getElementById("map"), {zoom: 14, center: location,});
+          var i;
+            @for (var i = 0; i < ViewBag.lat.Count; i++)
+            {
+                @Html.Raw("addMarker(" + ViewBag.lat[i] + "," + ViewBag.lng[i] + ");");
+            }
+
+        function addMarker(x, y) {
+
+            var location = new google.maps.LatLng(x, y);
+            var marker = new google.maps.Marker({
+                position: location,
+                map: map,
+            });
+        }
+
+
+
+         });
+
+
+
+
+
+    }
+</script>

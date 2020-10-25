@@ -22,7 +22,7 @@ namespace TrashCollectorProject.Models
         [Display(Name = "Current Balance")]
         [DefaultValue(0)]
         public double AccountBalance { get; set; }
-        [Display(Name = "Pick up day of the week")]
+        [Display(Name = "Pick up day")]
         public string PickUpDay { get; set; }
        
 

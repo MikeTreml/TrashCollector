@@ -12,7 +12,7 @@ using TrashCollectorProject.Models;
 
 namespace TrashCollectorProject.Controllers
 {
-   // [Authorize(Roles = "Employee")]
+    // [Authorize(Roles = "Employee")]
     public class EmployeesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -32,13 +32,24 @@ namespace TrashCollectorProject.Controllers
                 return RedirectToAction("Create");
             }
             string dayString = date ?? DateTime.Today.DayOfWeek.ToString();
+            if (DateTime.Today.DayOfWeek.ToString() == dayString)
+            {
+                ViewData["Day"] = "Today";
+                ViewData["Hidden"] = "";
+            }
+            else
+            {
+                ViewData["Day"] = dayString;
+                ViewData["Hidden"] = "hidden";
+            }
+
             return View(DaySelect(dayString));
         }
         //public ActionResult Index(string day)
         //{
         //    return View(DaySelect(day));
         //}
-        public ActionResult PickComplete(int id) 
+        public ActionResult PickComplete(int id)
         {
             //charge customer
             var customer = _context.Customer.Where(c => c.AddressId == id).SingleOrDefault();
@@ -49,7 +60,7 @@ namespace TrashCollectorProject.Controllers
             CompletedDates completed = new CompletedDates();
             completed.AddressId = id;
             completed.Date = DateTime.Today;
-           
+
             _context.Add(completed);
             _context.SaveChanges();
             return RedirectToAction("Index");
@@ -59,7 +70,7 @@ namespace TrashCollectorProject.Controllers
         public async Task<IActionResult> CustomerDetails(int? id)
         {
 
-            
+
             if (id == null)
             {
                 return NotFound();
@@ -95,7 +106,7 @@ namespace TrashCollectorProject.Controllers
         {
             if (ModelState.IsValid)
             {
-               
+
                 employee.IdentityUserId = this.User.FindFirstValue(ClaimTypes.NameIdentifier); ;
                 _context.Add(employee);
                 _context.SaveChanges();
@@ -107,7 +118,7 @@ namespace TrashCollectorProject.Controllers
         // GET: Employees/Edit/5
         public async Task<IActionResult> Edit()
         {
-            
+
             // ViewData["IdentityUserId"] = new SelectList(_context.Set<Customer>(), "ID", "ID");
 
             return View();
@@ -159,14 +170,17 @@ namespace TrashCollectorProject.Controllers
                                         from st in st2.DefaultIfEmpty()
                                         select new JoinCustomerAddress { CustomerVM = s, AddressVM = st };
 
-          if(dayOfWeek == DateTime.Today.DayOfWeek.ToString())
+            if (dayOfWeek == DateTime.Today.DayOfWeek.ToString())
             {
                 //completed table filtering only for todays dates. so to check if a complete pickup is done it only needs to search for the address ID below
                 completed = _context.CompletedDates.Where(c => c.Date == DateTime.Today);
                 dayCustomerfilter = joinCustomerAddresses
                     //filters today is in a suspended period or if is a one time pickup. the one tiem pickup is ment to override a suspention period
                     // in the case a customer doesn't want weekly pickup and only scheduled pickups
-                    .Where(c => c.CustomerVM.SuspendStart > DateTime.Today || c.CustomerVM.SuspendEnd < DateTime.Today || c.CustomerVM.OneTimePickUp == DateTime.Today)
+                    .Where(c => c.CustomerVM.SuspendStart > DateTime.Today
+                        || c.CustomerVM.SuspendEnd < DateTime.Today
+                        || (c.CustomerVM.SuspendStart == null && c.CustomerVM.SuspendEnd == null)
+                        || c.CustomerVM.OneTimePickUp == DateTime.Today)
                     //filters for the day of the week
                     .Where(c => c.CustomerVM.PickUpDay == dayOfWeek)
                     //filters zipcode
@@ -174,18 +188,24 @@ namespace TrashCollectorProject.Controllers
                     //filters against a completed table for the address ID
                     .Where(c => !completed.Any(f => f.AddressId == c.AddressVM.Id));
             }
-            else 
-            { 
+            else
+            {
                 // this is an option for an employee to there routes for who is getting pickups. this doesn't take in account suspended deliveries
                 completed = _context.CompletedDates;
                 dayCustomerfilter = joinCustomerAddresses
                     .Where(c => c.CustomerVM.PickUpDay == dayOfWeek)
                     .Where(c => c.AddressVM.ZipCode == employee.ZipCode);
             }
+            List<double> lat = dayCustomerfilter.Select(c => c.AddressVM.Latitude).ToList();
+            List<double> lng = dayCustomerfilter.Select(c => c.AddressVM.Longitude).ToList();
+            
+            ViewBag.lat = lat;
+            ViewBag.lng = lng;
+            ViewBag.zip = employee.ZipCode;
             return dayCustomerfilter;
         }
 
-       
+
         private bool EmployeeExists(int id)
         {
             return _context.Employee.Any(e => e.Id == id);
