@@ -14,7 +14,7 @@ using TrashCollectorProject.Models;
 
 namespace TrashCollectorProject.Controllers
 {
-   // [Authorize(Roles = "Customer")]
+    [Authorize(Roles = "Customer")]
     public class CustomersController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -29,40 +29,21 @@ namespace TrashCollectorProject.Controllers
         {
             var customers = _context.Customer;
             var id = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var customer = customers.Where(c => c.IdentityUserId == id).FirstOrDefault();
-            //ViewData["AddressID"] = _context.Address.Where(h => h.Id == customer.Id).SingleOrDefault();
-            //ViewData["IdentityUserId"] = new SelectList(_context.Set<Customer>(), "ID", "ID");
-            //var applicationDbContext = _context.Customer.Include(c => c.Identity);
-            //var customer = await _context.Customer.Include(c => c.Identity).FirstOrDefaultAsync(m => m.Id == id);
+            var customer = customers.Where(c => c.IdentityUserId == id).SingleOrDefault();
+           
             if (customer == null)
             {
-                return RedirectToAction("Create");
-               //return NotFound();
+                return RedirectToAction(nameof(Create));
+
             }
+
 
             return View(customer);
         }
 
-        //// GET: Customers/Details/5
-        //public async Task<IActionResult> Details()
-        //{
-        //    var id = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //    var customer = _context.Customer.Where(h => h.IdentityUserId == id).SingleOrDefault();
-        //    //var applicationDbContext = _context.Customer.Include(c => c.Identity);
-        //    //var customer = await _context.Customer.Include(c => c.Identity).FirstOrDefaultAsync(m => m.Id == id);
-        //    if (customer == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(customer);
-        //}
-
         // GET: Customers/Create
         public ActionResult Create()
         {
-            //ViewData["AddressID"] = new SelectList(_context.Set<Address>(), "AddressID", "AddressID");
-            //ViewData["IdentityUserId"] = new SelectList(_context.Set<Customer>(), "ID", "ID");
             return View();
         }
 
@@ -117,18 +98,18 @@ namespace TrashCollectorProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Customer customer)
         {
-            if (customer.Id == 0)
-            {
-                return RedirectToAction("Create", customer);
+            //if (customer.Id == 0)
+            //{
+            //    return RedirectToAction("Create", customer);
 
-            }
+            //}
             // ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", customer.IdentityUserId);
             //ViewData["AddressID"] = new SelectList(_context.Set<Address>(), "AddressID", "AddressID", customer.AddressId);
             if (ModelState.IsValid)
             {
                 try
                 {
-                    
+                    customer.IdentityUserId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                     _context.Update(customer);
                     await _context.SaveChangesAsync();
 
@@ -150,6 +131,11 @@ namespace TrashCollectorProject.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
+            }
+            if (customer.Id == 0)
+            {
+                return RedirectToAction("Create", customer);
+
             }
             return View("Index");
         }

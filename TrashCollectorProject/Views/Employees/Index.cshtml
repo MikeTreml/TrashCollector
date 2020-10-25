@@ -6,27 +6,15 @@
 
 }
 <h1>View @ViewData["Day"]</h1>
-<div>
-    <a asp-action="Index" asp-route-date="Sunday">Sunday    </a>
-    <a asp-action="Index" asp-route-date="Monday">Monday    </a>
-    <a asp-action="Index" asp-route-date="Tuesday">Tuesday  </a>
-    <a asp-action="Index" asp-route-date="Wednesday">Wednesday  </a>
-    <a asp-action="Index" asp-route-date="Thursday">Thursday    </a>
-    <a asp-action="Index" asp-route-date="Friday">Friday    </a>
-    <a asp-action="Index" asp-route-date="Saturday">Saturday    </a>
 
-</div>
 <table>
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.CustomerVM.FirstName)
+                Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CustomerVM.LastName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CustomerVM.AccountBalance)
+                Balance
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CustomerVM.PickUpDay)
@@ -35,11 +23,9 @@
                 @Html.DisplayNameFor(model => model.CustomerVM.OneTimePickUp)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CustomerVM.SuspendStart)
+                No Service
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CustomerVM.SuspendEnd)
-            </th>
+            
             <th>
                 @Html.DisplayNameFor(model => model.AddressVM.ZipCode)
             </th>
@@ -53,11 +39,9 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CustomerVM.FirstName)
+                    @Html.DisplayFor(modelItem => item.CustomerVM.FirstName)  @Html.DisplayFor(modelItem => item.CustomerVM.LastName)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CustomerVM.LastName)
-                </td>
+                
                 <td>
                     @Html.DisplayFor(modelItem => item.CustomerVM.AccountBalance)
                 </td>
@@ -68,11 +52,9 @@
                     @Html.DisplayFor(modelItem => item.CustomerVM.OneTimePickUp)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CustomerVM.SuspendStart)
+                    @Html.DisplayFor(modelItem => item.CustomerVM.SuspendStart) -  @Html.DisplayFor(modelItem => item.CustomerVM.SuspendEnd)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CustomerVM.SuspendEnd)
-                </td>
+               
                 <td>
                     @Html.DisplayFor(modelItem => item.AddressVM.ZipCode)
                 </td>
@@ -98,6 +80,7 @@
         width: 100%;
         height: 400px;
         background-color: grey;
+        padding-top: 15px;
     }
 </style>
 
