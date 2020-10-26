@@ -18,12 +18,9 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
-            
-               
-                <a type="hidden" asp-for="IdentityUserId" class="form-control" asp-items="ViewBag.IdentityUserId"></a>
-                <a type="hidden" asp-for="AccountBalance" class="form-control" asp-items="ViewBag.IdentityUserId"></a>
-           
-            
+
+          
+
 
 
             <div class="form-group">
@@ -101,6 +98,11 @@
             </div>
 
             <div class="form-group">
+                <div hidden>
+                    <input asp-for="IdentityUserId" class="form-control" asp-items="ViewBag.IdentityUserId" />
+                    <input asp-for="AccountBalance" class="form-control" />
+                    <input asp-for="AddressId" class="form-control" />
+                </div>
 
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

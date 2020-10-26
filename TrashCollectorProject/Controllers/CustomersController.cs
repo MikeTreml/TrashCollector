@@ -14,7 +14,7 @@ using TrashCollectorProject.Models;
 
 namespace TrashCollectorProject.Controllers
 {
-    [Authorize(Roles = "Customer")]
+    //[Authorize(Roles = "Customer")]
     public class CustomersController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -77,12 +77,7 @@ namespace TrashCollectorProject.Controllers
         public ActionResult Edit()
         {
 
-            //var customers = _context.Customer;
-            //var address = _context.Address;
-            //var joinCustomerAddresses = from s in customers
-            //                            join st in address on s.AddressId equals st.Id into st2
-            //                            from st in st2.DefaultIfEmpty()
-            //                            select new JoinCustomerAddress { CustomerVM = s, AddressVM = st };
+            
             var id = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var person = _context.Customer.Where(h => h.IdentityUserId == id).SingleOrDefault();
             var address = _context.Address.Where(h => h.Id == person.AddressId).SingleOrDefault();
@@ -98,26 +93,24 @@ namespace TrashCollectorProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Customer customer)
         {
-            //if (customer.Id == 0)
-            //{
-            //    return RedirectToAction("Create", customer);
-
-            //}
-            // ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", customer.IdentityUserId);
-            //ViewData["AddressID"] = new SelectList(_context.Set<Address>(), "AddressID", "AddressID", customer.AddressId);
+           
+           
             if (ModelState.IsValid)
             {
                 try
                 {
                     customer.IdentityUserId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
                     _context.Update(customer);
-                    await _context.SaveChangesAsync();
+                    
 
                     var customerAddress = _context.Address.Where(a => a.Id == customer.AddressId).SingleOrDefault();
                     IGeocoder geocoder = new GoogleGeocoder() { ApiKey = APIKeys.GOOGLE_API_KEY };
                     IEnumerable<Geocoding.Address> addresses = await geocoder.GeocodeAsync(customerAddress.AddressLine1 + " " + customerAddress.City + " " + customerAddress.State + " " + customerAddress.ZipCode);
                     customerAddress.Latitude = addresses.First().Coordinates.Latitude;
                     customerAddress.Longitude = addresses.First().Coordinates.Longitude;
+                    _context.Update(customerAddress);
+                    await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -140,35 +133,7 @@ namespace TrashCollectorProject.Controllers
             return View("Index");
         }
         
-        //// GET: Customers/Delete/5
-        //public async Task<IActionResult> Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var customer = await _context.Customer
-        //        .Include(c => c.Identity)
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (customer == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(customer);
-        //}
-
-        //// POST: Customers/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> DeleteConfirmed(int id)
-        //{
-        //    var customer = await _context.Customer.FindAsync(id);
-        //    _context.Customer.Remove(customer);
-        //    await _context.SaveChangesAsync();
-        //    return RedirectToAction(nameof(Index));
-        //}
+        
 
         private bool CustomerExists(int id)
         {
