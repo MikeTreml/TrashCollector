@@ -102,7 +102,7 @@ namespace TrashCollectorProject.Controllers
                     customer.IdentityUserId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
                     _context.Update(customer);
-                    
+                    await _context.SaveChangesAsync();
 
                     var customerAddress = _context.Address.Where(a => a.Id == customer.AddressId).SingleOrDefault();
                     IGeocoder geocoder = new GoogleGeocoder() { ApiKey = APIKeys.GOOGLE_API_KEY };
